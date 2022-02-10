@@ -1,16 +1,29 @@
 import { useState } from "react"
 import './style.css'
+import ModalSection from './Components/Modal'
+import DataContainer from './Components/Data'
 
 const App = () => {
     const [Modal, setModal] = useState(false)
+    const Body = document.querySelector("body")
+
+    document.body.addEventListener('keydown', (e) => {
+        if (e.key === "Escape") {
+            if ( !Modal ) return false
+            else {
+                Body.removeAttribute("class")
+                setModal(false)
+            }
+        }
+    });
 
     const ClickButton = () => {
-        setModal(true)
+        Body.setAttribute("class", "active"); setModal(true)
     }
 
     const ModalClick = (e) => {
         if ( e.target !== e.currentTarget ) return true
-        else setModal(false)
+        else setModal(false); Body.removeAttribute("class")
     }
 
     return(
@@ -18,13 +31,11 @@ const App = () => {
             <section id="app">
                 <h1>Text For Tester Modal Here</h1>
                 <button onClick={ ClickButton } id="modal-button">Test Modal Here</button>
-                <div id="modal-box" className={ Modal ? "active" : "" }>
-                    <div className="wrapper-box" onClick={ ModalClick }>
-                        <div className="wrapper-content">
-                            Tester
-                        </div>
-                    </div>
-                </div>
+                <ModalSection
+                    ModalStatus={ Modal }
+                    ModalClick={ ModalClick }
+                    ModalData={ <DataContainer /> }
+                />
             </section>
         </>
     )
